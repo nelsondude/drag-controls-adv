@@ -3,7 +3,7 @@
 var THREE = require('three');
 
 
-function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
+function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate ) {
 
     if ( _objects instanceof THREE.Camera ) {
 
@@ -20,6 +20,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
     var _intersection = new THREE.Vector3();
 
     var _selected = null, _hovered = null;
+    var _pos = new THREE.Vector3();
 
     //
 
@@ -88,6 +89,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
 
             var object = intersects[ 0 ].object;
 
+
             // Set plane so that it is normal to the camera direction, and object point
             // Should actually just provide the program a plane
             _plane.setFromNormalAndCoplanarPoint( _planeNormal, object.position );
@@ -126,7 +128,9 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
 
         if ( intersects.length > 0 ) {
 
-            _selected = intersects[ 0 ].object;
+            _selected = intersects[ 0 ].object.parent;
+
+            _pos.copy(_selected.position);
 
             if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 
@@ -150,6 +154,8 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
         if ( _selected ) {
 
             scope.dispatchEvent( { type: 'dragend', object: _selected } );
+
+            animate(_selected, _pos);
 
             _selected = null;
 
@@ -203,7 +209,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
 
         if ( intersects.length > 0 ) {
 
-            _selected = intersects[ 0 ].object;
+            _selected = intersects[ 0 ].object.parent;
 
             _plane.setFromNormalAndCoplanarPoint( _planeNormal, _selected.position );
 
