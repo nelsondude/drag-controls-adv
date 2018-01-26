@@ -3,7 +3,7 @@
 var THREE = require('three');
 
 
-function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate ) {
+function DragControlsAdv( _objects, _camera, _domElement, _planeNormal ) {
 
     if ( _objects instanceof THREE.Camera ) {
 
@@ -20,7 +20,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
     var _intersection = new THREE.Vector3();
 
     var _selected = null, _hovered = null;
-    var _pos = new THREE.Vector3();
+    // var _pos = new THREE.Vector3();
 
     //
 
@@ -87,7 +87,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
 
         if ( intersects.length > 0 ) {
 
-            var object = intersects[ 0 ].object;
+            var object = intersects[ 0 ].object.parent;
 
 
             // Set plane so that it is normal to the camera direction, and object point
@@ -130,7 +130,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
 
             _selected = intersects[ 0 ].object.parent;
 
-            _pos.copy(_selected.position);
+            // _pos.copy(_selected.position);
 
             if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 
@@ -155,7 +155,7 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
 
             scope.dispatchEvent( { type: 'dragend', object: _selected } );
 
-            animate(_selected, _pos);
+            // animate(_selected, _pos);
 
             _selected = null;
 
@@ -211,6 +211,8 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
 
             _selected = intersects[ 0 ].object.parent;
 
+            // _pos.copy(_selected.position);
+
             _plane.setFromNormalAndCoplanarPoint( _planeNormal, _selected.position );
 
             if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
@@ -235,6 +237,8 @@ function DragControlsAdv( _objects, _camera, _domElement, _planeNormal, animate 
         if ( _selected ) {
 
             scope.dispatchEvent( { type: 'dragend', object: _selected } );
+
+            // animate(_selected, _pos);
 
             _selected = null;
 
